@@ -1,6 +1,8 @@
 import os
 import time
 import re
+from pymongo import MongoClient
+import json
 from slackclient import SlackClient
 
 slack_client = SlackClient(os.environ.get('SLACK_BOT_TOKEN'))
@@ -23,15 +25,18 @@ def parse_direct_mention(message_text):
     return (matches.group(1), matches.group(2).strip()) if matches else (None, None)
 
 def handle_command(command, channel):
-    default_response = "Not sure what you mean. Try *{}*".format(EXAMPLE_COMMAND)
-    response = None
-    if command.startswith(EXAMPLE_COMMAND):
-      response = "Sure...write some more code then I can do that!"
+    client = MongoClient()
+    db = client.murphyslaws
+    collection = db.laws
+    law = collection.find_one()
+    law = law[u'law']
+    print(law)
+    response = json.dumps(law)
     
     slack_client.api_call(
       "chat.postMessage",
       channel=channel,
-      text=response or default_response)
+      text=response)
 
 if __name__=="__main__":
     if slack_client.rtm_connect(with_team_state=False):
