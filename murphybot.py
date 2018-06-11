@@ -30,7 +30,6 @@ def handle_command(command, channel):
     collection = db.laws
     law = collection.find_one()
     law = law[u'law']
-    print(law)
     response = json.dumps(law)
     
     slack_client.api_call(
