@@ -11,6 +11,7 @@ murphybot_id = None
 RTM_READ_DELAY = 1
 EXAMPLE_COMMAND = "do"
 MENTION_REGEX = "^<@(|[WU].+?)>(.*)"
+pipeline = [{"$sample": { "size":1 }}]
 
 def parse_bot_commands(slack_events):
    for event in slack_events:
@@ -28,8 +29,9 @@ def handle_command(command, channel):
     client = MongoClient()
     db = client.murphyslaws
     collection = db.laws
-    law = collection.find_one()
-    law = law[u'law']
+    law = collection.aggregate(pipeline)
+    law = list(law)
+    law = law[0][u'law']
     response = json.dumps(law)
     
     slack_client.api_call(
