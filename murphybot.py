@@ -59,5 +59,3 @@ def postToSlack(response_data, webhook_url):
       data=response_data,
       headers={'Content-Type': 'application/json'}
     )
-
-    print(slack_message.statusCode)
