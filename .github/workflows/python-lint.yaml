@@ -4,19 +4,23 @@ on: [push]
 
 jobs:
   linting:
-    name: Lint Python
+    name: Lint and Deploy Lambda
     runs-on: ubuntu-latest
     steps:
+      # Checkout the current repo
       - name: Checkout
         uses: actions/checkout@v2
-
+      # Use Python3.6 environment
       - name: Setup Python 3.6
         uses: actions/setup-python@v1
         with:
           python-version: '3.6'
-
+      # Install pylint(can test with flake8 and others)
       - name: Install pylint
         run: sudo apt-get -y install pylint
-
-      - name: Lint Code
-        run: pylint murphybot.py
+      # Run the linter
+#      - name: Lint Code
+#        run: pylint *.py
+      # Build virtual environment if the code was linted successfully
+      - name: Build Virtual Environment
+        run: virtualenv venv
