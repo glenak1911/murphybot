@@ -3,10 +3,20 @@ name: Run Linter
 on: [push]
 
 jobs:
-  verify:
-    name: Verify Python Version
-    runs-on: centos/python-36-centos7
+  linting:
+    name: Lint Python
+    runs-on: ubuntu-latest
     steps:
-      - name:
-        run: |
-          python --version
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.6'
+
+      - name: Install pylint
+        run: sudo apt-get -y install pylint
+
+      - name: Lint Code
+        run: pylint murphybot.py
