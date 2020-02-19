@@ -22,12 +22,15 @@ jobs:
         run: sudo apt-get -y install pylint
 
       # Run the linter
-      - name: Lint Code
-        run: pylint *.py
+      #- name: Lint Code
+      #  run: pylint *.py
 
       # Build virtual environment if the code was linted successfully
       - name: Install Virtualenv
         run: python -m pip install virtualenv
 
-      - name: Build Virtual Environment
-        run: virtualenv murphybot
+      - name: Build and activate Virtual Environment
+        run: virtualenv murphybot && source murphybot/bin/activate
+
+      - name: Deactivate Virtual Environment
+        run: deactivate
