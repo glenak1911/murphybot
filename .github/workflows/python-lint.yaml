@@ -22,8 +22,8 @@ jobs:
         run: sudo apt-get -y install pylint
 
       # Run the linter
-      #- name: Lint Code
-      #  run: pylint *.py
+      - name: Lint Code
+        run: pylint ./**/*.py
 
       # Build virtual environment if the code was linted successfully
       - name: Install Virtualenv
