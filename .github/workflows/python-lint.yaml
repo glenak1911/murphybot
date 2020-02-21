@@ -29,8 +29,14 @@ jobs:
       - name: Install Virtualenv
         run: python -m pip install virtualenv
 
-      - name: Build and activate Virtual Environment
-        run: virtualenv murphybot && source murphybot/bin/activate
-
-      - name: Deactivate Virtual Environment
-        run: deactivate
+      - name: Build in Virtual Environment
+        run: |
+          virtualenv murphybot
+          source murphybot/bin/activate
+          cd murphybot
+          pip install requests pymysql boto3
+          chmod -R 755 .
+          deactivate
+          zip -r ../murphybot.zip ./
+          cd ..
+          unzip -l murphybot.zip
