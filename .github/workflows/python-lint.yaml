@@ -25,12 +25,18 @@ jobs:
       #- name: Lint Code
       #  run: pylint *.py
 
-      # Build virtual environment if the code was linted successfully
-      - name: Install Virtualenv
-        run: python -m pip install virtualenv
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+          role-to-assume: arn:aws:iam::942158337222:role/gk_lambda_deploy_role
+          role-duration-seconds: 900
 
       - name: Build in Virtual Environment
         run: |
+          python -m pip install virtualenv
           virtualenv murphybot
           source murphybot/bin/activate
           cd murphybot
@@ -39,4 +45,6 @@ jobs:
           deactivate
           zip -r ../murphybot.zip ./
           cd ..
-          unzip -l murphybot.zip
+
+#      - name: Build Lambda Artifact
+#        run: |
