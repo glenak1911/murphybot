@@ -48,3 +48,8 @@ jobs:
 
 #      - name: Build Lambda Artifact
 #        run: |
+      - name: Upload Lambda Artifact
+        uses: actions/upload-artifact@v1
+        with:
+          name: murphybot
+          path: murphybot.zip
