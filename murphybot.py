@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import sys
 import pymysql.cursors
 
 def handler(event, context):
