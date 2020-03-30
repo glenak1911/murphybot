@@ -15,4 +15,6 @@ jobs:
       - name: Tag Change
         run: |
           branch_name="${{ github.head_ref }}"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git tag "$branch_name" -m "in Dev"
