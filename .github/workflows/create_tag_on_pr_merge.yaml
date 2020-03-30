@@ -1,0 +1,15 @@
+---
+name: Create Tag on Pull Request Merge
+on:
+  pull_request:
+    types: closed
+
+jobs:
+  tag_merged_pr:
+    name: Create Tag on PR Merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tag Change
+        run: |
+          branch_name="${{ github.ref }}"
+          git tag "$branch_name" -m "in Dev"
