@@ -9,7 +9,10 @@ jobs:
     name: Create Tag on PR Merge
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Tag Change
         run: |
-          branch_name="${{ github.ref }}"
+          branch_name="${{ github.head_ref }}"
           git tag "$branch_name" -m "in Dev"
