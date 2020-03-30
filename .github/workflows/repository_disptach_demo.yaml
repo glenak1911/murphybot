@@ -1,9 +1,6 @@
 name: Remote Dispatch Action Initiator DEMO
 
 on:   
-  push:
-  schedule:
-    - cron: '*/5 * * * *'
   repository_dispatch:
 
 jobs:
