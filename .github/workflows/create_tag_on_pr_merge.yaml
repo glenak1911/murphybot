@@ -8,6 +8,7 @@ jobs:
   tag_merged_pr:
     name: Create Tag on PR Merge
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged
     steps:
       - name: Checkout
         uses: actions/checkout@v2
