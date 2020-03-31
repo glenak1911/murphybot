@@ -1,0 +1,16 @@
+---
+name: Pull Request Labler
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  label_pull_request:
+    name: Add label to Pull Request
+    if: github.event.pull_request.merged == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label Pull Request
+        uses: actions/labeler@v2
+        with:
+          repo-token: "${{ secrets.ACCESS_TOKEN }}"
