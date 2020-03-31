@@ -7,7 +7,7 @@ on:
 jobs:
   label_pull_request:
     name: Add label to Pull Request
-    if: github.event.pull_request.merged == 'true'
+    if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     steps:
       - name: Label Pull Request
