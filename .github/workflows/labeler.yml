@@ -29,4 +29,5 @@ jobs:
           curl -X POST "${{ github.event.pull_request.head.repo.issues_url }}/labels" \
             -H 'Accept: application/vnd.github.everest-preview+json' \
             -u ${{ secrets.ACCESS_TOKEN }} \
-            -d '{ "labels": [ "'"${{ github.head_ref }}"'" ] }'
+            -d '{ "labels": [ "'"${{ github.head_ref }}"'" ] }' \
+             --verbose
