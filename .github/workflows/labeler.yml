@@ -6,7 +6,7 @@ on:
 
 jobs:
   label_pull_request:
-    name: Add label to Pull Request
+    name: Add Code Label To Pull Request
     if: github.event.pull_request.merged
     runs-on: ubuntu-latest
     steps:
@@ -14,3 +14,17 @@ jobs:
         uses: actions/labeler@v2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  label_pull_request_tag:
+    name: Add Tag Label To Pull Request
+    if: github.event.pull_request.merged
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label Pull Request - Tag
+        run: |
+          tag_name="${{ github.head_ref }}"
+          pull_request_url="${{ github.pull_request.url }}"
+          curl -X POST "${pull_request_url}/labels" \
+            -H 'Accept: application/vnd.github.everest-preview+json' \
+            -u ${{ secrets.ACCESS_TOKEN }} \
+            -d "{ $(echo $tag_name) }"
