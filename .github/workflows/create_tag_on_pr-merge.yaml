@@ -1,0 +1,23 @@
+---
+name: Create Tag on Pull Request Merge
+on:
+  pull_request:
+    types: closed
+
+jobs:
+  tag_merged_pr:
+    name: Create Tag on PR Merge
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Tag Change
+        run: |
+          branch_name="${{ github.head_ref }}"
+          commit_sha="${{ github.sha }}"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag "$branch_name" "$commit_sha" -m "in Dev"
+          git push --tags
