@@ -23,8 +23,7 @@ jobs:
       - name: Label Pull Request - Tag
         run: |
           tag_name="${{ github.head_ref }}"
-          pull_request_url="${{ github.event.pull_request.url }}"
-          curl -X POST "${pull_request_url}/labels" \
+          curl -X POST "${{ github.event.pull_request.url }}/labels" \
             -H 'Accept: application/vnd.github.everest-preview+json' \
             -u ${{ secrets.ACCESS_TOKEN }} \
-            -d "{ $(echo $tag_name) }"
+            -d { "labels": ["$(echo $tag_name)"] }
