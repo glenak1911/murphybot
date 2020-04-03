@@ -23,7 +23,7 @@ jobs:
           #parse semvar version - remove env and leading v
           latest_version_full=${latest_version_full#"v"}
           version_full=( ${latest_version_full//-/ } )
-          version="${version[0]}"
+          version="${version_full[0]}"
           echo "$version"
           version_array=( ${version//./} )
           #bump by patch version, add patch version if doesn't exist
