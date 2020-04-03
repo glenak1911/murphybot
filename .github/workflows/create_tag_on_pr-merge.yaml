@@ -15,7 +15,7 @@ jobs:
 
       - name: Tag Change
         run: |
-          set -ex
+          set -x
           #git fetch tags
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           #fetch latest semvar tag
@@ -35,6 +35,7 @@ jobs:
           ((version_array[2]++))
           # build version from array
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
+          echo "New version: ${new_version}"
           commit_sha="${{ github.sha }}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
