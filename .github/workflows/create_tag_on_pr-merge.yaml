@@ -16,6 +16,7 @@ jobs:
       - name: Tag Change
         run: |
           set -x
+          bash --version
           #git fetch tags
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           #fetch latest semvar tag
@@ -23,7 +24,7 @@ jobs:
           #parse semvar version - remove env and leading v
           latest_version_full=${latest_version_full#"v"}
           version_full=( ${latest_version_full//-/ } )
-          version="${version_full[0]:0:2}"
+          version="${version_full[0]}"
           echo "$version"
           #version_array=($(echo $version|tr "\." "\n"))
           IFS='.' read -r -a version_array <<< "$version"
@@ -32,7 +33,10 @@ jobs:
           then
             version_array+=(0)
           fi
-          (( version_array[2]++ ))
+          patch_version=${version_array[2]}
+          patch_version+=1
+          version_array[2]="$(echo $patch_version)"
+          #(( version_array[2]++ ))
           # build version from array
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
           echo "New version: ${new_version}"
