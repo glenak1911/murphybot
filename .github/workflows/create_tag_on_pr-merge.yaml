@@ -15,9 +15,27 @@ jobs:
 
       - name: Tag Change
         run: |
-          branch_name="${{ github.head_ref }}"
+          #git fetch tags
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          #fetch latest semvar tag
+          latest_version_full="$(git tag | sort -r --version-sort | head -n1)"
+          #parse semvar version - remove env and leading v
+          latest_version_full=${latest_version_full#"v"}
+          version_full=( ${latest_version_full//-/ } )
+          version="${version[0]}"
+          echo "$version"
+          version_array=( ${version//./} )
+          #bump by patch version, add patch version if doesn't exist
+          if [ ${#version[@]} -ne 3 ]
+          then
+            version_array+=(0)
+          else
+            ((version_array[2]++))
+          fi
+          # build version from array
+          new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
           commit_sha="${{ github.sha }}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag "$branch_name" "$commit_sha" -m "in Dev"
+          git tag "$new_version" "$commit_sha"
           git push --tags
