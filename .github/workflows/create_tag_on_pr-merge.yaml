@@ -32,7 +32,7 @@ jobs:
           then
             version_array+=(0)
           fi
-          ((version_array[2]++))
+          (( version_array[2]++ ))
           # build version from array
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
           echo "New version: ${new_version}"
