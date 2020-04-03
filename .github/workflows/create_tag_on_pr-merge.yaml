@@ -41,3 +41,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git tag "$new_version" "$commit_sha"
           git push --tags
+        shell: bash
