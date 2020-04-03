@@ -34,8 +34,8 @@ jobs:
             version_array+=(0)
           fi
           patch_version=${version_array[2]}
-          patch_version+=1
-          version_array[2]="$(echo $patch_version)"
+          let "patch_version+=1"
+          version_array[2]=$patch_version
           #(( version_array[2]++ ))
           # build version from array
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
