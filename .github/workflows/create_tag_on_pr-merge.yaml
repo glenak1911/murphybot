@@ -25,7 +25,7 @@ jobs:
           version_full=( ${latest_version_full//-/ } )
           version="${version_full[0]}"
           echo "$version"
-          version_array=( ${version//./} )
+           version_array=($(echo $version|tr "\." "\n"))
           #bump by patch version, add patch version if doesn't exist
           if [ ${#version[@]} -ne 3 ]
           then
