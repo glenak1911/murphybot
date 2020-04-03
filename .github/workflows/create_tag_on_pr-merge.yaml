@@ -32,7 +32,9 @@ jobs:
           then
             version_array+=(0)
           fi
-          (( version_array[2]++ ))
+          echo "version pattern: ${version_array[@]}"
+          echo "Incrementing patch version"
+          ((version_array[2]++))
           # build version from array
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
           echo "New version: ${new_version}"
