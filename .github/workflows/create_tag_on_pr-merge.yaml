@@ -1,4 +1,4 @@
----
+--
 name: Create Tag on Pull Request Merge
 on:
   pull_request:
@@ -28,7 +28,7 @@ jobs:
           #version_array=($(echo $version|tr "\." "\n"))
           IFS='.' read -r -a version_array <<< "$version"
           #bump by patch version, add patch version if doesn't exist
-          if [ ${#version[@]} -ne 3 ]
+          if [ ${#version_array[@]} -ne 3 ]
           then
             version_array+=(0)
           fi
