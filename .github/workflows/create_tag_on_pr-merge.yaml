@@ -1,4 +1,4 @@
---
+---
 name: Create Tag on Pull Request Merge
 on:
   pull_request:
