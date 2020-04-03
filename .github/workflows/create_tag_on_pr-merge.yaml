@@ -25,7 +25,8 @@ jobs:
           version_full=( ${latest_version_full//-/ } )
           version="${version_full[0]}"
           echo "$version"
-          version_array=($(echo $version|tr "\." "\n"))
+          #version_array=($(echo $version|tr "\." "\n"))
+          IFS='.' read -r -a version_array <<< "$version"
           #bump by patch version, add patch version if doesn't exist
           if [ ${#version[@]} -ne 3 ]
           then
@@ -39,4 +40,3 @@ jobs:
           git config --local user.name "GitHub Action"
           git tag "$new_version" "$commit_sha"
           git push --tags
-        shell: bash
