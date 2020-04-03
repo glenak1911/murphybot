@@ -15,6 +15,7 @@ jobs:
 
       - name: Tag Change
         run: |
+          set -ex
           #git fetch tags
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           #fetch latest semvar tag
