@@ -30,9 +30,8 @@ jobs:
           if [ ${#version[@]} -ne 3 ]
           then
             version_array+=(0)
-          else
-            ((version_array[2]++))
           fi
+          ((version_array[2]++))
           # build version from array
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
           commit_sha="${{ github.sha }}"
@@ -40,3 +39,4 @@ jobs:
           git config --local user.name "GitHub Action"
           git tag "$new_version" "$commit_sha"
           git push --tags
+        shell: bash
