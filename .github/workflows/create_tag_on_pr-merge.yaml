@@ -16,19 +16,17 @@ jobs:
       - name: Tag Change
         run: |
           set -x
-          bash --version
-          #git fetch tags
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          #fetch latest semvar tag
           latest_version_full="$(git tag | sort -r --version-sort | head -n1)"
-          #parse semvar version - remove env and leading v
+          if [ -z "$latest_version_full" ]
+          then
+            latest_version_full="0.0.0"
+          fi
           latest_version_full=${latest_version_full#"v"}
           version_full=( ${latest_version_full//-/ } )
           version="${version_full[0]}"
           echo "$version"
-          #version_array=($(echo $version|tr "\." "\n"))
           IFS='.' read -r -a version_array <<< "$version"
-          #bump by patch version, add patch version if doesn't exist
           if [ ${#version_array[@]} -ne 3 ]
           then
             version_array+=(0)
@@ -36,13 +34,53 @@ jobs:
           patch_version=${version_array[2]}
           let "patch_version+=1"
           version_array[2]=$patch_version
-          #(( version_array[2]++ ))
-          # build version from array
-          new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}-DEV"
+          new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}"
+          echo "new_version=$new_version">>version.env
           echo "New version: ${new_version}"
           commit_sha="${{ github.sha }}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git tag "$new_version" "$commit_sha"
+          git tag "${new_version}-dev" "$commit_sha"
           git push --tags
         shell: bash
+
+      - name: Upload Version.env
+        uses: actions/upload-artifact@v1
+        with:
+          name: version
+          path: version.env
+
+  label_pull_request:
+    name: Add Tag Label To Pull Request
+    if: github.event.pull_request.merged
+    needs: [tag_merged_pr]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download Depoloy Env
+        uses: actions/download-artifact@v1
+        with:
+          name: version
+
+      - name: Setup Deploy Env Vars
+        run: |
+          set -x
+          source version/version.env
+          echo "::set-env name=NEW_VERSION::$(echo $new_version)"
+
+      - name: Add Code Label To Pull Request
+        uses: actions/labeler@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Add Tag Label To Pull Request
+        run: |
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          #fetch latest semvar tag
+          latest_version_full="$(git tag | sort -r --version-sort | head -n1)"
+          curl -X POST "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels" \
+            -H 'Accept: application/vnd.github.everest-preview+json' \
+            -u ${{ secrets.ACCESS_TOKEN }} \
+            -d '{ "labels": [ "'"${NEW_VERSION}"'" ] }'
