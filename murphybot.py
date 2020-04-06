@@ -2,7 +2,7 @@ import os
 import json
 import requests
 import pymysql.cursors
-import sys
+
 
 def handler(event, context):
     # Grab webhook url
