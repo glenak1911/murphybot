@@ -37,11 +37,14 @@ jobs:
               major_version=${version_array[0]}
               let "major_version+=1"
               version_array[0]=$major_version
+              version_array[1]=0
+              version_array[2]=0
               ;;
             *#minor* )
               minor_version=${version_array[1]}
               let "minor_version+=1"
               version_array[1]=$minor_version
+              version_array[2]=0
               ;;
             *#patch* ) 
               patch_version=${version_array[2]}
