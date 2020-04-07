@@ -1,0 +1,56 @@
+---
+name: Stack Deployment Status
+on: [repository_dispatch]
+
+jobs:
+  report_status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job Status Report
+        if: github.event.action == 'deploy-status'
+        run: |
+          set -x
+          deploy_env="${{ github.event.client_payload.environment }}"
+          deploy_status="${{ github.event.client_payload.status }}"
+          deploy_job="${{ github.event.client_payload.job }}"
+          deploy_repo="${{ github.event.client_payload.repository }}"
+          deploy_tag="${{ github.event.client_payload.tag }}"
+          echo "Job: $deploy_job Status: $deploy_status Environment: $deploy_env Repository: $deploy_repo Tag: $deploy_tag"
+          if [[ "$deploy_status" == "success" ]]; then
+            exit 0
+          elif [[ "deploy_status" == "failure" ]]; then
+            exit 1
+          fi
+  update_tag:
+    runs-on: ubuntu-latest
+    needs: [report_status]
+    steps:
+      - name: Checkout Target Repo
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.event.action.client_payload.repository }}
+          ref: ${{ github.event.action.client_payload.release }}
+
+      - name: Update Tag
+        run: |
+          set -x
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          old_tag_name="${{ github.event.action.client_payload.release }}"
+          tag_exist="$(git tag -l $old_tag_name)"
+          if [ -z "$tag_exist" ]; then
+            echo "Tag Does not exist or already updated"
+            exit 0
+          else
+            #parse semvar version - remove env
+            old_version_full=( ${old_tag_name//-/ } )
+            version="${old_version_full[0]}"
+            echo "Version number - ${version}"
+            new_tag_name="${version}-${{ github.event.action.client_payload.environment }}"
+            # build version from array
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            git tag "$new_tag_name" "$old_tag_name"
+            git tag -d "$old_tag_name"
+            git push origin :refs/tags/${old_tag_name}
+            git push --tags
+          fi
