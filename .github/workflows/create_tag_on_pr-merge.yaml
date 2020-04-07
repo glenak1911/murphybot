@@ -62,6 +62,8 @@ jobs:
           new_version="v${version_array[0]}.${version_array[1]}.${version_array[2]}"
           echo "new_version=$new_version">>version.env
           echo "New version: ${new_version}"
+          dev_version="${new_version}-dev"
+          echo "dev_version=$dev_version">>version.env
           commit_sha="${{ github.sha }}"
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -129,6 +131,7 @@ jobs:
           set -x
           source version/version.env
           echo "::set-env name=NEW_VERSION::$(echo $new_version)"
+          echo "::set-env name=DEV_VERSION::$(echo $dev_version)"
           echo "::set-env name=DEPLOY_ENV::qa"
           
       - name: Repository Dispatch Success
@@ -137,4 +140,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: glenak1911/murphybot
           event-type: deploy-status
-          client-payload: '{"job": "test_dispatch", "status": "success", "environment": "${{env.DEPLOY_ENV}}", "repository": "${{github.repository}}", "tag": "${{env.NEW_VERSION}}"}'
+          client-payload: '{"job": "test_dispatch", "status": "success", "environment": "${{env.DEPLOY_ENV}}", "repository": "${{github.repository}}", "tag": "${{env.DEV_VERSION}}"}'
