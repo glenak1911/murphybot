@@ -137,4 +137,4 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository: glenak1911/murphybot
           event-type: deploy-status
-          client-payload: '{"job": "test_dispatch", "status": "success", "environment": "${{env.DEPLOY_ENV}}", "repository": "${{github.repository}}", "tag": "${{env.NEW_VERSION}}}"'
+          client-payload: '{"job": "test_dispatch", "status": "success", "environment": "${{env.DEPLOY_ENV}}", "repository": "${{github.repository}}", "tag": "${{env.NEW_VERSION}}"}'
