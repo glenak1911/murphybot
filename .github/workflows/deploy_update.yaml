@@ -28,14 +28,14 @@ jobs:
       - name: Checkout Target Repo
         uses: actions/checkout@v2
         with:
-          repository: ${{ github.event.action.client_payload.repository }}
-          ref: ${{ github.event.action.client_payload.release }}
+          repository: ${{ github.event.client_payload.repository }}
+          ref: ${{ github.event.client_payload.release }}
 
       - name: Update Tag
         run: |
           set -x
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-          old_tag_name="${{ github.event.action.client_payload.tag }}"
+          old_tag_name="${{ github.event.client_payload.tag }}"
           tag_exist="$(git tag -l $old_tag_name)"
           if [ -z "$tag_exist" ]; then
             echo "Tag Does not exist or already updated"
