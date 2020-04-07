@@ -109,3 +109,32 @@ jobs:
             -H 'Accept: application/vnd.github.everest-preview+json' \
             -u ${{ secrets.ACCESS_TOKEN }} \
             -d '{ "labels": [ "'"${NEW_VERSION}"'" ] }'
+
+  test_update_tag:
+      name: Update Tag
+      runs-on: ubuntu-latest
+      needs: [label_pull_request]
+      if: github.event.pull_request.merged
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download Depoloy Env
+        uses: actions/download-artifact@v1
+        with:
+          name: version
+
+      - name: Setup Deploy Env Vars
+        run: |
+          set -x
+          source version/version.env
+          echo "::set-env name=NEW_VERSION::$(echo $new_version)"
+          echo "::set-env name=DEPLOY_ENV::qa"
+          
+      - name: Repository Dispatch Success
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository: glenak1911/murphybot
+          event-type: deploy-status
+          client-payload: '{"job": "test_dispatch", "status": "success", "environment": "${{env.DEPLOY_ENV}}", "repository": "${{github.repository}}", "tag": "${{env.NEW_VERSION}}}"'
