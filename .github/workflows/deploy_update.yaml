@@ -45,7 +45,7 @@ jobs:
             old_version_full=( ${old_tag_name//-/ } )
             version="${old_version_full[0]}"
             echo "Version number - ${version}"
-            new_tag_name="${version}-${{ github.event.action.client_payload.environment }}"
+            new_tag_name="${version}-${{ github.event.client_payload.environment }}"
             # build version from array
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
