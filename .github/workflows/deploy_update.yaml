@@ -41,16 +41,14 @@ jobs:
             echo "Tag Does not exist or already updated"
             exit 0
           else
-            #parse semvar version - remove env
+            tag_commit="$(git rev-list -n 1 $old_tag_name)"
             old_version_full=( ${old_tag_name//-/ } )
             version="${old_version_full[0]}"
             echo "Version number - ${version}"
             new_tag_name="${version}-${{ github.event.client_payload.environment }}"
-            # build version from array
+            echo "::set-env name=DEPLOY_ENV::$(echo $deploy_env)"
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
-            git tag "$new_tag_name" "$old_tag_name"
-            git tag -d "$old_tag_name"
-            git push origin :refs/tags/${old_tag_name}
+            git tag "${new_tag_name}" "$tag_commit"
             git push --tags
           fi
