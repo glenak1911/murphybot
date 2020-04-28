@@ -1,4 +1,5 @@
 name: Test repo dispatch consumer
+on:
   repository_dispatch:
     types: [repository_dispatch_test]
 
