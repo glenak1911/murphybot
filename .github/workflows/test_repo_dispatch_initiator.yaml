@@ -1,7 +1,7 @@
 name: Test Deploy 
 on: 
   schedule
-    - cron: * * * * *
+    - cron: '* * * * *'
  
 
 jobs:
