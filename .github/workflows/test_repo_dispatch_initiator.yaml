@@ -1,7 +1,5 @@
 name: Test Deploy 
-on: 
-  schedule:
-    - cron: '* * * * *'
+on: push
  
 
 jobs:
