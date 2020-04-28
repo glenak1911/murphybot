@@ -1,0 +1,18 @@
+name: Test Deploy 
+on: schedule
+  - cron: * * * * *
+ 
+
+jobs:
+  build:
+    name: Test Repository Dispatch
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deployment Success Status
+      if: success() && github.event.action == 'repository_dispatch_test'
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.ACCESS_TOKEN }}
+        repository: ${{github.repository}}
+        event-type: repository_dispatch_test
+        client-payload: '{"job": "test", "status": "success", "environment": "${{env.ENVIRONMENT}}", "repository": "${{github.repository}}", "tag": "${{env.RELEASE_TAG}}"}'
