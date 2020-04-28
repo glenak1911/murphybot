@@ -1,6 +1,6 @@
 name: Test Deploy 
 on: 
-  schedule
+  schedule:
     - cron: '* * * * *'
  
 
