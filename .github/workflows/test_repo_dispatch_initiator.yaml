@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Deployment Success Status
-      if: success() && github.event.action == 'repository_dispatch_test'
       uses: peter-evans/repository-dispatch@v1
       with:
         token: ${{ secrets.ACCESS_TOKEN }}
