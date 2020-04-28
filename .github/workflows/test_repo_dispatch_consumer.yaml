@@ -1,0 +1,18 @@
+name: Test repo dispatch consumer
+  repository_dispatch:
+    types: [repository_dispatch_test]
+
+jobs:
+  build:
+    name: Receive Repository Dispatch
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say Hi
+        run: |
+          echo "Hello World"
+
+      - name: Deployment Success Status
+        if: success() && github.event.action == 'repository_dispatch_test'
+        run: |
+          echo "Deploy Succeeded"
